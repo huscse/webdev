@@ -22,6 +22,7 @@ h2 {
   padding-bottom: 5px;
   margin-top: 30px;
 }
+
 .content-section {
   background-color: white;
   padding: 20px;
@@ -46,3 +47,142 @@ h2 {
 #start-button:hover {
   background-color: #2a9bc7;
 }
+
+/*
+
+WRITTEN BY MOST HANDSOME PERSON IN THE WORLD
+04/27/25 DanielY
+
+*/
+
+#titleDiv{
+  width: 1920px;
+  height: 50px;
+  position: absolute;
+  left: 0px;
+  top:-25px;
+}
+#H1{
+  position: absolute;
+  right: 40%;
+  transition: 1s;
+}
+#H1:hover{
+  
+  cursor: pointer;
+  color: grey;
+  
+}
+#PAUSE{
+  display: block;
+  width: 200px;
+  height: 60px;
+  background-color: #1e7898;
+  color: white;
+  border: black;
+  font-size: 1.5em;
+  cursor: pointer;
+  position: absolute;
+  left: 10px;
+  transition: 0.5s;
+}
+#PAUSE:hover{
+  background-color: grey;
+  font-weight: bold;
+  
+}
+#TIMER{
+  font-weight: bold;
+  position: absolute;
+  color: #1e7898;
+  font-size: 2.5em;
+  right: 100px;
+}
+#actualTimer{
+  position: absolute;
+  right: -60px;
+  top: 0px;
+}
+#gameBoard{
+  bottom: 0px;
+  left: 20px;
+  position: absolute;
+  height: 880px;
+  width: 1880px;
+  background-color: beige;
+  align-content: center;
+
+}
+#SCORE{
+  display: flex;
+  justify-content: center;
+  color: #1e7898;
+  font-weight: bold;
+  font-size: 2.5em;
+}
+#FinalScore{
+  display: flex;
+  justify-content: center;
+  color: #1e7898;
+  font-weight: bold;
+  bottom:20px;
+  font-size: 2.5em;
+  top: 400px;
+  position: absolute;
+}
+.row{
+  display: flex;
+  gap: 28rem;
+  width: 1800px;
+  justify-content: center;
+  position: relative;
+  padding: 55px;
+  top: -40px;
+}
+.hole {
+  width: 100px;
+  height: 100px;
+  border: 2px dotted black;
+  background-color: rgba(0, 0, 0, 0.836);
+  border-radius: 50%;
+  position: relative;
+}
+
+.hole:hover {
+  cursor: crosshair;
+}
+
+#mole {
+  position: absolute;
+  bottom: 0; /* start hidden in hole */
+  left: 50%;
+  transform: translateX(-50%); /* center mole horizontally */
+  height: 90px;
+  width: 75px;
+  background-color: brown;
+  transition: bottom 0.5s ease; /* smooth up/down only */
+}
+
+#mole:hover {
+  cursor: pointer;
+}
+#TSecondTimer{
+  position: absolute;
+  background-color: white;
+  opacity: 80%;
+  width: 1950px;
+  height: 950px;
+  left: 0px;
+  top: -5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#IntroTimer{
+  opacity: 100%;
+  font-weight: bold;
+  font-size: 20em;
+
+}
+
