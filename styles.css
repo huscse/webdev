@@ -186,3 +186,21 @@ WRITTEN BY MOST HANDSOME PERSON IN THE WORLD
 
 }
 
+.score-effect {
+  position: absolute;
+  font-size: 2em;
+  font-weight: bold;
+  animation: floatUp 1s ease forwards;
+  pointer-events: none; 
+}
+@keyframes floatUp {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50px);
+  }
+}
+
