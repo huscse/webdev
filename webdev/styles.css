@@ -188,12 +188,11 @@ WRITTEN BY MOST HANDSOME PERSON IN THE WORLD
 
 .score-effect {
   position: absolute;
-  font-size: 1.5rem;
+  font-size: 2em;
   font-weight: bold;
   animation: floatUp 1s ease forwards;
-  pointer-events: none;
+  pointer-events: none; 
 }
-
 @keyframes floatUp {
   0% {
     opacity: 1;
@@ -205,86 +204,3 @@ WRITTEN BY MOST HANDSOME PERSON IN THE WORLD
   }
 }
 
-/* Media Queries */
-/* Small devices (phones) */
-@media only screen and (max-width: 600px) {
-  h1 {
-    font-size: 1.8rem;
-  }
-
-  h2 {
-    font-size: 1.4rem;
-  }
-
-  #start-button {
-    width: 150px;
-    height: 50px;
-    font-size: 1.2rem;
-  }
-
-  .hole {
-    width: 60px;
-    height: 60px;
-  }
-
-  #mole {
-    height: 50px;
-    width: 45px;
-  }
-
-  #IntroTimer {
-    font-size: 5rem;
-  }
-
-  .row {
-    gap: 10px;
-    padding: 10px;
-  }
-
-  #PAUSE {
-    width: 120px;
-    height: 40px;
-    font-size: 1rem;
-  }
-
-  #TIMER,
-  #SCORE,
-  #FinalScore {
-    font-size: 1.5rem;
-  }
-}
-
-/* Medium devices (tablets) */
-@media only screen and (min-width: 601px) and (max-width: 900px) {
-  .row {
-    gap: 15px;
-  }
-
-  .hole {
-    width: 70px;
-    height: 70px;
-  }
-
-  #mole {
-    height: 60px;
-    width: 50px;
-  }
-
-  #IntroTimer {
-    font-size: 7rem;
-  }
-}
-
-/* Large devices (desktops) */
-@media only screen and (min-width: 901px) and (max-width: 1200px) {
-  .row {
-    gap: 18px;
-  }
-}
-
-/* Extra large devices */
-@media only screen and (min-width: 1201px) {
-  .container {
-    max-width: 1400px;
-  }
-}
