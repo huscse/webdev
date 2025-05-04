@@ -1,40 +1,26 @@
-/* Base styles */
 body {
   font-family: 'Arial', sans-serif;
   line-height: 1.6;
-  margin: 0;
-  padding: 0;
-  background-color: #f0f7fa;
-  color: #333;
-  overflow-x: hidden;
-}
-
-/* Container for content */
-.container {
-  width: 100%;
-  max-width: 1200px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  box-sizing: border-box;
+  background-color: #f0f7fa;
+  color: #333;
 }
-
 header {
   text-align: center;
   margin-bottom: 30px;
 }
-
 h1 {
   color: #1e7898;
-  font-size: 2.5rem;
+  font-size: 2.5em;
   margin-bottom: 10px;
 }
-
 h2 {
   color: #1e7898;
   border-bottom: 2px solid #b3e0ff;
   padding-bottom: 5px;
   margin-top: 30px;
-  font-size: 1.8rem;
 }
 
 .content-section {
@@ -45,7 +31,6 @@ h2 {
   margin-bottom: 20px;
   border-left: 4px solid #1e7898;
 }
-
 #start-button {
   display: block;
   width: 200px;
@@ -55,163 +40,150 @@ h2 {
   color: white;
   border: none;
   border-radius: 30px;
-  font-size: 1.5rem;
+  font-size: 1.5em;
   cursor: pointer;
   transition: background-color 0.3s;
 }
-
 #start-button:hover {
   background-color: #2a9bc7;
 }
 
-/* Game elements */
-#titleDiv {
-  width: 100%;
-  height: 50px;
-  position: relative;
-  margin-bottom: 25px;
-}
+/*
 
-#H1 {
-  position: relative;
-  margin: 0 auto;
-  text-align: center;
+WRITTEN BY MOST HANDSOME PERSON IN THE WORLD
+04/27/25 DanielY
+
+*/
+
+#titleDiv{
+  width: 1920px;
+  height: 50px;
+  position: absolute;
+  left: 0px;
+  top:-25px;
+}
+#H1{
+  position: absolute;
+  right: 40%;
   transition: 1s;
 }
-
-#H1:hover {
+#H1:hover{
+  
   cursor: pointer;
   color: grey;
+  
 }
-
-#PAUSE {
+#PAUSE{
   display: block;
-  width: 150px;
-  height: 50px;
+  width: 200px;
+  height: 60px;
   background-color: #1e7898;
   color: white;
-  border: none;
-  border-radius: 25px;
-  font-size: 1.2rem;
+  border: black;
+  font-size: 1.5em;
   cursor: pointer;
+  position: absolute;
+  left: 10px;
   transition: 0.5s;
-  margin: 10px 0;
 }
-
-#PAUSE:hover {
+#PAUSE:hover{
   background-color: grey;
   font-weight: bold;
+  
 }
-
-#TIMER {
+#TIMER{
   font-weight: bold;
-  color: #1e7898;
-  font-size: 2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 10px 0;
-}
-
-#actualTimer {
-  margin-left: 10px;
-}
-
-#gameBoard {
-  position: relative;
-  width: 100%;
-  height: auto;
-  min-height: 400px;
-  background-color: beige;
-  margin: 20px auto;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-#SCORE {
-  display: flex;
-  justify-content: center;
-  color: #1e7898;
-  font-weight: bold;
-  font-size: 2rem;
-  margin: 10px 0;
-}
-
-#FinalScore {
-  display: flex;
-  justify-content: center;
-  color: #1e7898;
-  font-weight: bold;
-  font-size: 2rem;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
+  color: #1e7898;
+  font-size: 2.5em;
+  right: 100px;
 }
+#actualTimer{
+  position: absolute;
+  right: -60px;
+  top: 0px;
+}
+#gameBoard{
+  bottom: 0px;
+  left: 20px;
+  position: absolute;
+  height: 880px;
+  width: 1880px;
+  background-color: beige;
+  align-content: center;
 
-.row {
+}
+#SCORE{
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 20px;
-  padding: 20px;
+  color: #1e7898;
+  font-weight: bold;
+  font-size: 2.5em;
 }
-
-/* Add hammer cursor to game elements */
-#gameBoard {
-  cursor: url('public/hammer.png'), auto;
-  /* If hammer.png doesn't work, you might need to try: */
-  /* cursor: url('public/hammer.png') 16 32, auto; */
+#FinalScore{
+  display: flex;
+  justify-content: center;
+  color: #1e7898;
+  font-weight: bold;
+  bottom:20px;
+  font-size: 2.5em;
+  top: 400px;
+  position: absolute;
 }
-
+.row{
+  display: flex;
+  gap: 28rem;
+  width: 1800px;
+  justify-content: center;
+  position: relative;
+  padding: 55px;
+  top: -40px;
+}
 .hole {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   border: 2px dotted black;
   background-color: rgba(0, 0, 0, 0.836);
   border-radius: 50%;
   position: relative;
-  overflow: hidden; /* Critical to hide part of the mole */
-  cursor: url('public/hammer.png'), auto;
-}
-
-#mole {
-  position: absolute;
-  width: auto;
-  height: 100px; /* Make the image taller than the hole */
-  left: 50%;
-  transform: translateX(-50%);
-  transition: bottom 0.3s ease;
-  cursor: url('public/hammer.png'), auto;
-}
-/* For when the mole is visible */
-.mole-up {
-  bottom: 0 !important; /* Show the mole */
 }
 
 .hole:hover {
   cursor: crosshair;
 }
 
-#TSecondTimer {
+#mole {
+  position: absolute;
+  bottom: 0; /* start hidden in hole */
+  left: 50%;
+  transform: translateX(-50%); /* center mole horizontally */
+  height: 90px;
+  width: 75px;
+  background-color: brown;
+  transition: bottom 0.5s ease; /* smooth up/down only */
+}
+
+#mole:hover {
+  cursor: pointer;
+}
+#TSecondTimer{
   position: absolute;
   background-color: white;
   opacity: 80%;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
+  width: 1950px;
+  height: 950px;
+  left: 0px;
+  top: -5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
 }
 
-#IntroTimer {
+#IntroTimer{
   opacity: 100%;
   font-weight: bold;
-  font-size: 10rem;
+  font-size: 20em;
+
 }
 
 .score-effect {
