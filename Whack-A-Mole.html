@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Whack-a-Professor - A fun and educational twist on the classic arcade game."
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Whack-a-Professor REAL GAME</title>
+  </head>
+  <body>
+    <!--
+        Started from here was written by the best programmer in the world, god given abiltiy to code
+        Daniel 04/27/25
+    -->
+    <div id="titleDiv">
+      <header>
+        <h1 id="H1">Whack A Professor</h1>
+      </header>
+      <div id="TIMER">Time Left:</div>
+      <button id="PAUSE">Pause Button</button>
+    </div>
+
+    <div id="gameBoard">
+      <div id="SCORE">
+        SCORE:
+        <div id="ActualScore">0</div>
+      </div>
+      <div id="r1" class="row">
+        <div id="h1r1" class="hole"></div>
+        <div id="h2r1" class="hole"></div>
+        <div id="h3r1" class="hole"></div>
+        <div id="h4r1" class="hole"></div>
+      </div>
+      <div id="r2" class="row">
+        <div id="h1r2" class="hole"></div>
+        <div id="h2r2" class="hole"></div>
+        <div id="h3r2" class="hole"></div>
+        <div id="h4r2" class="hole"></div>
+      </div>
+      <div id="r3" class="row">
+        <div id="h1r3" class="hole"></div>
+        <div id="h2r3" class="hole"></div>
+        <div id="h3r3" class="hole"></div>
+        <div id="h4r3" class="hole"></div>
+      </div>
+      <div id="r4" class="row">
+        <div id="h1r4" class="hole"></div>
+        <div id="h2r4" class="hole"></div>
+        <div id="h3r4" class="hole"></div>
+        <div id="h4r4" class="hole"></div>
+      </div>
+    </div>
+
+    <script>
+      document.getElementById('H1').onclick = function () {
+        window.location.href = 'index.html';
+      };
+    </script>
+    <script src="Whack-A-Mole.js"></script>
+  </body>
+</html>
