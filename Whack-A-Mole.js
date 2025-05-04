@@ -75,14 +75,42 @@ function StartRealTimer() {
       };
     }, 100);
     for (let d = 0; d < amountOfMolesAtOnce; d++) {
-      var mole = document.createElement('div');
+      // Create the mole image
+      var mole = document.createElement('img');
       mole.id = 'mole';
-      mole.onclick = function () {
-        CheckMolePosition(mole);
+      mole.src = '/prof-gross-draft1.png'; /* Path to your professor image */
+      mole.alt = 'Professor';
+
+      // Add mole to a hole
+      const randomHole = document.querySelector('.hole'); // Or select a random hole
+      randomHole.appendChild(mole);
+
+      // To make the mole appear
+      function showMole() {
+        mole.classList.add('mole-up');
+      }
+
+      // To hide the mole
+      function hideMole() {
+        mole.classList.remove('mole-up');
+      }
+      mole.onclick = function (event) {
+        CheckMolePosition(mole, event);
       };
       GameLogic(mole);
     }
   }
+  document
+    .getElementById('gameBoard')
+    .addEventListener('click', function (event) {
+      // Only count as a miss if clicking directly on the gameBoard (not on a mole)
+      if (
+        event.target.id === 'gameBoard' ||
+        event.target.className === 'hole'
+      ) {
+        MoleMissed(event);
+      }
+    });
 }
 function Pause(interval) {
   isPaused = !isPaused;
@@ -126,46 +154,43 @@ function GameLogic(molee) {
 }
 
 function PopUpMole(molee) {
-  //Function to move a specific mole up from its hole and start moving the mole down after half of the popUpMoleTime
-
+  // Choose random row and hole (keep this part the same)
   var randomRow = parseInt(Math.random() * 3 + 1);
   var randomHole = parseInt(Math.random() * 3 + 1);
+
+  // Style changes - initially position the mole fully hidden in the hole
   molee.style.display = 'block';
-  molee.style.bottom = '0';
+  molee.style.bottom = '-80px'; // Start lower to hide the mole completely
   molee.classList.add('Up');
   molee.classList.remove('Down');
+
+  // Put the molee at that position
   document.getElementById(`h${randomHole}r${randomRow}`).appendChild(molee);
 
   // tiny delay to let browser catch style change
   setTimeout(() => {
-    molee.style.bottom = '50px'; // Move mole up
+    // Move the mole up to a position where only part of it is visible
+    molee.style.bottom = '-30px'; // Adjust this value to control how much of the mole is visible
   }, 10);
 
+  // After the molee has moved up, wait half of the popUpMoleTime and put that shit down
   setTimeout(() => {
     PopDownMole(molee);
   }, popUpMoleTime / 2);
 }
 
 function PopDownMole(molee) {
-  //Function to move a specifc mole down from its hole
+  // Make the mole go back down into the hole
   molee.classList.add('Down');
   molee.classList.remove('Up');
-  molee.style.bottom = '0';
+  molee.style.bottom = '-80px'; // Return to fully hidden position
 
+  // after a lil delay actually make the molee disapear
   setTimeout(() => {
     molee.style.display = 'none';
   }, 300);
 }
-function CheckMolePosition(molee) {
-  console.log(molee.classList);
-  if (molee.classList.contains('Up')) {
-    MoleClickedGood(molee);
-  } else if (molee.classList.contains('Down')) {
-    MoleClickedMedium();
-  } else {
-    MoleMissed();
-  }
-}
+
 function MoleClickedGood(molee) {
   //Function that runs when the mole is clicked (when it is raised)
   //raised means give 10 points
@@ -178,7 +203,87 @@ function MoleClickedMedium() {
   document.getElementById('ActualScore').innerHTML =
     Number(document.getElementById('ActualScore').innerHTML) + 5;
 }
-function MoleMissed() {
-  //Function that runs when the user clicks on anywhere that isnt a mole and is in the gameBoard.
-  //Missing the mole means lose 5 points
+function MoleMissed(event) {
+  // Function that runs when the user clicks on anywhere that isn't a mole in the gameBoard
+  // Missing the mole means lose 5 points
+
+  // Deduct 5 points from the score
+  document.getElementById('ActualScore').innerHTML =
+    Number(document.getElementById('ActualScore').innerHTML) - 5;
+
+  // Create the floating score effect - position ABOVE the cursor
+  const effect = document.createElement('div');
+  effect.className = 'score-effect';
+  effect.style.left = `${event.clientX}px`;
+  effect.style.top = `${event.clientY - 50}px`; // Position 50px ABOVE cursor
+  effect.style.color = 'red';
+  effect.textContent = '-5';
+  document.body.appendChild(effect);
+
+  // Remove effect after animation
+  setTimeout(() => {
+    effect.remove();
+  }, 1000);
 }
+function CheckMolePosition(molee, event) {
+  // Function that checks where the mole is and what amount of points to give
+  if (molee.classList.contains('Up')) {
+    MoleClickedGood(molee);
+
+    const effect = document.createElement('div');
+    effect.className = 'score-effect';
+    effect.style.left = `${event.clientX}px`;
+    effect.style.top = `${event.clientY - 50}px`; // Position 50px ABOVE cursor
+    effect.style.color = 'green';
+    effect.textContent = '+10';
+    document.body.appendChild(effect);
+
+    // Remove effect after animation
+    setTimeout(() => {
+      effect.remove();
+    }, 1000);
+  } else if (molee.classList.contains('Down')) {
+    MoleClickedMedium();
+
+    const effect = document.createElement('div');
+    effect.className = 'score-effect';
+    effect.style.left = `${event.clientX}px`;
+    effect.style.top = `${event.clientY - 80}px`; // Position 50px ABOVE cursor
+    effect.style.color = 'yellow';
+    effect.textContent = '+5';
+    document.body.appendChild(effect);
+
+    // Remove effect after animation
+    setTimeout(() => {
+      effect.remove();
+    }, 1000);
+  }
+}
+
+function addHammerCursor() {
+  const hammer = document.createElement('img');
+  hammer.src = '/hammer.png';
+  hammer.id = 'hammerCursor';
+  hammer.style.position = 'absolute';
+  hammer.style.pointerEvents = 'none';
+  hammer.style.width = '120px'; // Adjust size as needed
+  hammer.style.height = 'auto';
+  hammer.style.transform = 'translate(-50%, -50%)'; // Center at cursor position
+  hammer.style.zIndex = '9999';
+  document.body.appendChild(hammer);
+
+  // Move hammer with cursor
+  document.addEventListener('mousemove', (e) => {
+    hammer.style.left = e.clientX + 'px';
+    hammer.style.top = e.clientY + 'px';
+  });
+
+  document.addEventListener('mousedown', () => {
+    hammer.style.transform = 'translate(-50%, -50%) rotate(30deg)';
+    setTimeout(() => {
+      hammer.style.transform = 'translate(-50%, -50%)';
+    }, 200);
+  });
+}
+
+addHammerCursor();
