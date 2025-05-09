@@ -22,6 +22,8 @@ let timeLeft = 60;
 let gameInterval = null, moleInterval = null;
 let mole, currentHole;
 let isPaused = false;
+let speedFactor = 1.0;
+let moleIsActive = false;
 
 function createGrid() {
   for (let r = 1; r <= 3; r++) {
@@ -84,6 +86,16 @@ function updateTime() {
   timeLeftBoard.textContent = timeLeft;
 }
 
+//Mole interval time
+function scheduleNextMole(){
+  if (timeLeft <= 0 || isPaused) return;
+  const randomDelay = 500 + Math.random() * 1500;
+  moleInterval = setTimeout(() => {
+    popUpMole();
+    scheduleNextMole();
+  }, randomDelay);
+}
+
 function startGame() {
   clearInterval(gameInterval);
   clearInterval(moleInterval);
@@ -93,6 +105,7 @@ function startGame() {
   score = 0;
   timeLeft = 60;
   isPaused = false;
+  speedFactor = 1.0;
   pauseBtn.textContent = "Pause";
   startBtn.textContent = "Start"; // Reset label to "Start"
   updateScore();
@@ -101,9 +114,11 @@ function startGame() {
   if (mole.parentNode) mole.parentNode.removeChild(mole);
 
   showCountdown(() => {
-    moleInterval = setInterval(() => {
-      popUpMole();
-    }, 1200);
+    scheduleNextMole();
+
+    setInterval(() =>{
+      speedFactor += 0.1;
+    }, 12000);
 
     gameInterval = setInterval(() => {
       timeLeft--;
@@ -126,17 +141,26 @@ function startGame() {
 }
 
 function popUpMole() {
-  if (isPaused) return;
+  if (isPaused || moleIsActive){
+    return;
+  }
+
+  moleIsActive = true;
 
   const holes = document.querySelectorAll(".hole");
   const index = Math.floor(Math.random() * holes.length);
   const hole = holes[index];
 
-  if (hole === currentHole) return;
+  if (hole === currentHole){
+    moleIsActive = false;
+    return;
+  }
 
   currentHole = hole;
   const inner = hole.querySelector(".hole-inner");
-  if (mole.parentNode) mole.parentNode.removeChild(mole);
+  if (mole.parentNode){
+    mole.parentNode.removeChild(mole);
+  }
   inner.appendChild(mole);
 
   setTimeout(() => {
@@ -144,22 +168,50 @@ function popUpMole() {
     mole.classList.remove("mole-down");
     mole.popStart = Date.now();
 
+    const visibleTime = Math.max(300, 1000 / speedFactor);
     setTimeout(() => {
       mole.classList.remove("mole-up");
       mole.classList.add("mole-down");
-    }, 1000);
+      moleIsActive = false;
+    }, visibleTime);
   }, 100);
 }
 
 function pauseGame() {
   isPaused = !isPaused;
   pauseBtn.textContent = isPaused ? "Resume" : "Pause";
+  if (isPaused){
+    pauseTimers();
+  }else{
+    resumeTimers();
+  }
 }
+//When pause time
+function pauseTimers(){
+  clearInterval(gameInterval);
+  clearTimeout(moleInterval);
+  gameInterval = null;
+  moleInterval = null;
+}
+//When resume time
+function resumeTimers(){
+  scheduleNextMole();
 
-function restartGame() {
-  uiSound.currentTime = 0;
-  uiSound.play();
-  startGame();
+  gameInterval = setInterval(() =>{
+    timeLeft--;
+    updateTime();
+
+    if (timeLeft <= 0){
+      pauseTimers();
+      endSound.currentTime = 0;
+      endSound.play();
+      
+      setTimeout(() =>{
+        alert("Game Over!");
+        startBtn.textContent = "Play Again";
+      }, 500);
+    }
+  }, 1000);
 }
 
 function showCountdown(callback) {
@@ -222,6 +274,12 @@ pauseBtn.addEventListener("click", () => {
 restartBtn.addEventListener("click", () => {
   restartGame();
 });
+//For restart the game
+function restartGame() {
+  uiSound.currentTime = 0;
+  uiSound.play();
+  startGame();
+}
 
 // Miss click
 grid.addEventListener("click", (e) => {

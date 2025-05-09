@@ -82,6 +82,8 @@ button:active {
   height: auto;
   transition: bottom 0.3s ease;
   pointer-events: auto;
+  background-color: rgba(0, 0, 0, 0.01);
+  cursor: pointer;
 }
 
 .mole-up {

@@ -55,12 +55,28 @@
     <button id="start-button">Start Game</button>
 
     <script>
-      // Basic JavaScript to handle button click
-      document
-        .getElementById('start-button')
-        .addEventListener('click', function () {
-          window.location.href = 'Whack-A-Mole.html';
-        });
+      // Background music before start
+      const bgm = new Audio('bgm.mp3');
+      bgm.loop = true;
+      bgm.volume = 0.2;
+    
+      window.addEventListener("load", () =>{
+        document.addEventListener("click", () =>{
+          if (bgm.paused) {
+            bgm.play().catch(err => {
+              console.warn("Autoplay blocked:", err);
+            });
+          }
+        }, { once: true });
+      });
+    
+      //Basic JavaScript to handle button click
+      document.getElementById('start-button')
+      .addEventListener('click', function (){
+        bgm.pause();
+        bgm.currentTime = 0;
+        window.location.href = 'Whack-A-Mole.html';
+      });
     </script>
   </body>
 </html>
