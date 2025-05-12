@@ -17,6 +17,9 @@ const startSound = new Audio('start.mp3');
 const endSound = new Audio('end.mp3');
 const countdownSound = new Audio('count.mp3');
 const uiSound = new Audio('click.mp3');
+const bgMusic = new Audio('gamebg.mp3');
+bgMusic.loop = true;
+bgMusic.volume = 0.2;
 
 //Game state variables
 let score = 0;
@@ -324,3 +327,4 @@ gameGrid.addEventListener("mousemove", (e) => {
 //Initialize
 createGrid();
 createMole();
+bgMusic.play();
