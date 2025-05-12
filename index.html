@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Meta and page setup -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
       content="Whack-a-Professor - A fun and educational twist on the classic arcade game."
     />
+    <!-- Link to external CSS file -->
     <link rel="stylesheet" href="styles.css" />
     <title>Whack a Professor</title>
   </head>
   <body>
+    <!-- Page header with game title -->
     <header>
       <h1>Whack a Professor</h1>
     </header>
 
+    <!-- Section: Game description -->
     <div class="content-section">
       <h2>Game Description</h2>
       <p>
@@ -28,6 +32,7 @@
       </p>
     </div>
 
+    <!-- Section: Game rules -->
     <div class="content-section">
       <h2>Rules</h2>
       <ul>
@@ -39,6 +44,7 @@
       </ul>
     </div>
 
+    <!-- Section: How to play instructions -->
     <div class="content-section">
       <h2>How to Play</h2>
       <ol>
@@ -52,14 +58,16 @@
       </ol>
     </div>
 
+    <!-- Start Game button that redirects to the actual game page -->
     <button id="start-button">Start Game</button>
 
     <script>
-      // Background music before start
+      //Load background music before start
       const bgm = new Audio('bgm.mp3');
       bgm.loop = true;
       bgm.volume = 0.2;
     
+      // Autoplay workaround for browsers - play music after first click
       window.addEventListener("load", () =>{
         document.addEventListener("click", () =>{
           if (bgm.paused) {
@@ -73,9 +81,9 @@
       //Basic JavaScript to handle button click
       document.getElementById('start-button')
       .addEventListener('click', function (){
-        bgm.pause();
-        bgm.currentTime = 0;
-        window.location.href = 'Whack-A-Mole.html';
+        bgm.pause(); // Stop background music
+        bgm.currentTime = 0; // Reset audio
+        window.location.href = 'Whack-A-Mole.html'; // Go to main game page
       });
     </script>
   </body>

@@ -1,3 +1,4 @@
+/* Basic body styling and custom cursor (hammer) */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -6,11 +7,13 @@ body {
   cursor: url('hammer.png'), auto;
 }
 
+/* Game title styling */
 h1 {
   color: #127399;
   margin-top: 20px;
 }
 
+/* General button appearance */
 button {
   background-color: #127399;
   color: white;
@@ -22,20 +25,25 @@ button {
   cursor: pointer;
 }
 
+/* Button hover effect */
 button:hover {
   background-color: #0e5c7a;
 }
 
+/* Button press (click) effect */
 button:active {
   transform: scale(0.95);
 }
 
+/* Score and timer text styling */
 .scoreboard {
   margin-top: 10px;
   font-size: 20px;
   font-weight: bold;
   color: #127399;
 }
+
+/* Countdown text before game starts */
 #countdown-message {
   font-size: 80px;
   font-weight: bold;
@@ -45,7 +53,7 @@ button:active {
   transition: opacity 0.3s ease;
 }
 
-
+/* Game grid layout (4 columns × 3 rows) */
 #grid {
   display: grid;
   grid-template-columns: repeat(4, 100px);
@@ -59,11 +67,13 @@ button:active {
   width: max-content;
 }
 
+/* Each hole container */
 .hole {
   position: relative;
   overflow: visible; /* allow popups */
 }
 
+/* Inner circle of each hole */
 .hole-inner {
   width: 100px;
   height: 100px;
@@ -73,6 +83,7 @@ button:active {
   overflow: hidden; /* clips mole */
 }
 
+/* Mole image styling and position */
 #mole {
   position: absolute;
   bottom: -80px;
@@ -86,20 +97,24 @@ button:active {
   cursor: pointer;
 }
 
+/* Mole is visible (popped up) */
 .mole-up {
   bottom: -20px !important;
 }
 
+/* Mole is hidden (down) */
 .mole-down {
   bottom: -80px !important;
 }
 
+/* Floating score popup animation */
 .score-popup {
   animation: floatUp 0.8s ease-out forwards;
   z-index: 10;
   position: absolute;
 }
 
+/* Animation for score popups */
 @keyframes floatUp {
   0% {
     opacity: 1;
@@ -121,6 +136,7 @@ button:active {
   display: none; /* Only show inside the game grid */
 }
 
+/* Hammer swing animation when hitting mole */
 #hammer.hit {
   transform: translate(-50%, -50%) rotate(-45deg);
 }

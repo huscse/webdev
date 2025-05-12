@@ -1,3 +1,4 @@
+//Get HTML elements
 const grid = document.getElementById("grid");
 const scoreBoard = document.getElementById("score");
 const timeLeftBoard = document.getElementById("timer");
@@ -9,7 +10,7 @@ const hammer = document.getElementById("hammer");
 const gameGrid = document.getElementById("grid");
 const countdown = document.getElementById("countdown-message");
 
-// Load sounds
+//Load sounds
 const hitSound = new Audio('hit.wav');
 const missSound = new Audio('miss.mp3');
 const startSound = new Audio('start.mp3');
@@ -17,6 +18,7 @@ const endSound = new Audio('end.mp3');
 const countdownSound = new Audio('count.mp3');
 const uiSound = new Audio('click.mp3');
 
+//Game state variables
 let score = 0;
 let timeLeft = 60;
 let gameInterval = null, moleInterval = null;
@@ -25,6 +27,7 @@ let isPaused = false;
 let speedFactor = 1.0;
 let moleIsActive = false;
 
+//Create 3x4 hole grid
 function createGrid() {
   for (let r = 1; r <= 3; r++) {
     for (let c = 1; c <= 4; c++) {
@@ -41,6 +44,7 @@ function createGrid() {
   }
 }
 
+//Create mole image and attach hit event
 function createMole() {
   mole = document.createElement("img");
   mole.src = "prof-gross-draft1.png";
@@ -49,6 +53,7 @@ function createMole() {
   mole.addEventListener("click", hitMole);
 }
 
+//Called when mole is clicked
 function hitMole(e) {
   if (mole.classList.contains("mole-up")) {
     hammer.classList.add("hit");
@@ -78,15 +83,17 @@ function hitMole(e) {
   e.stopPropagation();
 }
 
+//Update score display
 function updateScore() {
   scoreBoard.textContent = score;
 }
 
+//Update time display
 function updateTime() {
   timeLeftBoard.textContent = timeLeft;
 }
 
-//Mole interval time
+//Schedule next mole popup
 function scheduleNextMole(){
   if (timeLeft <= 0 || isPaused) return;
   const randomDelay = 500 + Math.random() * 1500;
@@ -96,6 +103,7 @@ function scheduleNextMole(){
   }, randomDelay);
 }
 
+//Start a new game
 function startGame() {
   clearInterval(gameInterval);
   clearInterval(moleInterval);
@@ -107,7 +115,7 @@ function startGame() {
   isPaused = false;
   speedFactor = 1.0;
   pauseBtn.textContent = "Pause";
-  startBtn.textContent = "Start"; // Reset label to "Start"
+  startBtn.textContent = "Start"; //Reset label to "Start"
   updateScore();
   updateTime();
 
@@ -116,6 +124,7 @@ function startGame() {
   showCountdown(() => {
     scheduleNextMole();
 
+    //Speed up mole every 12 seconds
     setInterval(() =>{
       speedFactor += 0.1;
     }, 12000);
@@ -140,6 +149,7 @@ function startGame() {
   });
 }
 
+//Make a mole appear in a random hole
 function popUpMole() {
   if (isPaused || moleIsActive){
     return;
@@ -177,6 +187,7 @@ function popUpMole() {
   }, 100);
 }
 
+//Toggle pause/resume
 function pauseGame() {
   isPaused = !isPaused;
   pauseBtn.textContent = isPaused ? "Resume" : "Pause";
@@ -186,14 +197,14 @@ function pauseGame() {
     resumeTimers();
   }
 }
-//When pause time
+//Stop timers when paused
 function pauseTimers(){
   clearInterval(gameInterval);
   clearTimeout(moleInterval);
   gameInterval = null;
   moleInterval = null;
 }
-//When resume time
+//Resume timers after pause
 function resumeTimers(){
   scheduleNextMole();
 
@@ -214,6 +225,7 @@ function resumeTimers(){
   }, 1000);
 }
 
+//Show countdown before game starts
 function showCountdown(callback) {
   countdownSound.currentTime = 0;
   countdownSound.play();
@@ -240,6 +252,7 @@ function showCountdown(callback) {
   }, 3500);
 }
 
+//Show +10, -5 popup text
 function showPopup(text, hole, isPositive = true) {
   const popup = document.createElement("div");
   popup.textContent = text;
@@ -258,7 +271,7 @@ function showPopup(text, hole, isPositive = true) {
   }, 1000);
 }
 
-// Button event handlers
+//Button event handlers
 startBtn.addEventListener("click", () => {
   uiSound.currentTime = 0;
   uiSound.play();
@@ -274,6 +287,7 @@ pauseBtn.addEventListener("click", () => {
 restartBtn.addEventListener("click", () => {
   restartGame();
 });
+
 //For restart the game
 function restartGame() {
   uiSound.currentTime = 0;
@@ -281,7 +295,7 @@ function restartGame() {
   startGame();
 }
 
-// Miss click
+//Miss click
 grid.addEventListener("click", (e) => {
   if (e.target.classList.contains("hole-inner")) {
     missSound.currentTime = 0;
@@ -293,7 +307,7 @@ grid.addEventListener("click", (e) => {
   }
 });
 
-// Hammer movement
+//Hammer movement
 gameGrid.addEventListener("mouseenter", () => {
   hammer.style.display = "block";
 });
@@ -307,6 +321,6 @@ gameGrid.addEventListener("mousemove", (e) => {
   hammer.style.top = e.pageY + "px";
 });
 
-// Initialize
+//Initialize
 createGrid();
 createMole();
