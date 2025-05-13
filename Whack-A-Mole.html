@@ -1,32 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Whack-a-Professor</title>
-  <link rel="stylesheet" href="styles.css"/>
-</head>
-<body>
-  <div class="header">
-    <h1>Whack-a-Professor</h1>
-    <div class="buttons">
-      <button id="startBtn">Start</button>
-      <button id="pauseBtn">Pause</button>
-      <button id="restartBtn">Restart</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Whack-a-Professor</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="header">
+      <h1>Whack-a-Professor</h1>
+      <div class="buttons">
+        <button id="startBtn">Start</button>
+        <button id="pauseBtn">Pause</button>
+        <button id="restartBtn">Restart</button>
+      </div>
     </div>
-  </div>
 
-  <div class="scoreboard">
-    <h2>SCORE: <span id="score">0</span></h2>
-    <h3>Time Left: <span id="timer">60</span></h3>
-  </div>
-  
-  <div id="countdown-message"></div>
-  <div class="game-grid" id="grid"></div>
+    <div class="scoreboard">
+      <h2>SCORE: <span id="score">0</span></h2>
+      <h3>Time Left: <span id="timer">60</span></h3>
+    </div>
 
-  <img id="hammer" src="hammer.png" alt="Hammer"/>
+    <div id="countdown-message"></div>
+    <div class="game-grid" id="grid"></div>
 
-  <script src="Whack-A-Mole.js" defer></script>
+    <img id="hammer" src="hammer.png" alt="Hammer" />
 
-</body>
+    <script src="Whack-A-Mole.js" defer></script>
+  </body>
 </html>

@@ -1,4 +1,4 @@
-/* Basic body styling and custom cursor (hammer) */
+/* Global body styling and custom cursor */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -7,13 +7,59 @@ body {
   cursor: url('hammer.png'), auto;
 }
 
-/* Game title styling */
+/* Header styling */
+header {
+  background-color: #127399;
+  color: white;
+  padding: 20px 0;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 38px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  padding-left: 25px;
+  color: white;
+}
+
+/* Game title styling (if outside header) */
 h1 {
   color: #127399;
   margin-top: 20px;
 }
 
-/* General button appearance */
+/* Content section styling */
+.content-section {
+  max-width: 800px;
+  margin: 0 auto 30px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.content-section h2 {
+  color: #127399;
+  border-bottom: 2px solid #127399;
+  padding-bottom: 10px;
+  margin-top: 0;
+}
+
+/* List styling */
+ul,
+ol {
+  padding-left: 25px;
+}
+
+ul li,
+ol li {
+  margin-bottom: 10px;
+}
+
+/* Shared button styling */
 button {
   background-color: #127399;
   color: white;
@@ -23,6 +69,7 @@ button {
   border-radius: 25px;
   font-size: 16px;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 /* Button hover effect */
@@ -30,12 +77,34 @@ button:hover {
   background-color: #0e5c7a;
 }
 
-/* Button press (click) effect */
+/* Button press effect */
 button:active {
   transform: scale(0.95);
 }
 
-/* Score and timer text styling */
+/* Start Game button specific styles */
+#start-button {
+  display: block;
+  margin: 30px auto;
+  border-radius: 30px;
+  font-size: 22px;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  align-items: center;
+}
+
+#start-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+#start-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Scoreboard styling */
 .scoreboard {
   margin-top: 10px;
   font-size: 20px;
@@ -43,17 +112,17 @@ button:active {
   color: #127399;
 }
 
-/* Countdown text before game starts */
+/* Countdown message before game starts */
 #countdown-message {
   font-size: 80px;
   font-weight: bold;
   color: #222;
   margin: 20px 0;
-  height: 100px; /* reserve space so layout doesn’t jump */
+  height: 100px;
   transition: opacity 0.3s ease;
 }
 
-/* Game grid layout (4 columns × 3 rows) */
+/* Game grid layout */
 #grid {
   display: grid;
   grid-template-columns: repeat(4, 100px);
@@ -62,7 +131,7 @@ button:active {
   justify-content: center;
   margin: 30px auto;
   background-color: #fffdd0;
-  padding: 20px;
+  padding: 20px 20px 1px 20px;
   border-radius: 12px;
   width: max-content;
 }
@@ -70,20 +139,19 @@ button:active {
 /* Each hole container */
 .hole {
   position: relative;
-  overflow: visible; /* allow popups */
+  overflow: visible;
 }
 
-/* Inner circle of each hole */
 .hole-inner {
   width: 100px;
   height: 100px;
   border-radius: 50%;
   background-color: #222;
   position: relative;
-  overflow: hidden; /* clips mole */
+  overflow: hidden;
 }
 
-/* Mole image styling and position */
+/* Mole image */
 #mole {
   position: absolute;
   bottom: -80px;
@@ -97,24 +165,22 @@ button:active {
   cursor: pointer;
 }
 
-/* Mole is visible (popped up) */
+/* Mole position states */
 .mole-up {
   bottom: -20px !important;
 }
 
-/* Mole is hidden (down) */
 .mole-down {
   bottom: -80px !important;
 }
 
-/* Floating score popup animation */
+/* Score popup animation */
 .score-popup {
   animation: floatUp 0.8s ease-out forwards;
   z-index: 10;
   position: absolute;
 }
 
-/* Animation for score popups */
 @keyframes floatUp {
   0% {
     opacity: 1;
@@ -125,6 +191,8 @@ button:active {
     transform: translate(-50%, -180%) scale(1.2);
   }
 }
+
+/* Hammer image styling */
 #hammer {
   position: absolute;
   width: 60px;
@@ -133,10 +201,37 @@ button:active {
   transform: translate(-50%, -50%);
   transition: transform 0.1s ease;
   z-index: 1000;
-  display: none; /* Only show inside the game grid */
+  display: none;
 }
 
-/* Hammer swing animation when hitting mole */
 #hammer.hit {
   transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/* Timer padding */
+#timer {
+  padding-bottom: 10px;
+}
+
+/* Responsive design */
+@media (max-width: 850px) {
+  .content-section {
+    max-width: 90%;
+    padding: 15px;
+  }
+
+  header h1 {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 500px) {
+  header h1 {
+    font-size: 28px;
+  }
+
+  #start-button {
+    padding: 12px 30px;
+    font-size: 18px;
+  }
 }
