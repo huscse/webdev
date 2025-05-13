@@ -1,14 +1,14 @@
 //Get HTML elements
-const grid = document.getElementById("grid");
-const scoreBoard = document.getElementById("score");
-const timeLeftBoard = document.getElementById("timer");
+const grid = document.getElementById('grid');
+const scoreBoard = document.getElementById('score');
+const timeLeftBoard = document.getElementById('timer');
 
-const startBtn = document.getElementById("startBtn");
-const pauseBtn = document.getElementById("pauseBtn");
-const restartBtn = document.getElementById("restartBtn");
-const hammer = document.getElementById("hammer");
-const gameGrid = document.getElementById("grid");
-const countdown = document.getElementById("countdown-message");
+const startBtn = document.getElementById('startBtn');
+const pauseBtn = document.getElementById('pauseBtn');
+const restartBtn = document.getElementById('restartBtn');
+const hammer = document.getElementById('hammer');
+const gameGrid = document.getElementById('grid');
+const countdown = document.getElementById('countdown-message');
 
 //Load sounds
 const hitSound = new Audio('hit.wav');
@@ -24,22 +24,26 @@ bgMusic.volume = 0.2;
 //Game state variables
 let score = 0;
 let timeLeft = 60;
-let gameInterval = null, moleInterval = null;
+let gameInterval = null,
+  moleInterval = null;
 let mole, currentHole;
 let isPaused = false;
 let speedFactor = 1.0;
 let moleIsActive = false;
+let isGameRunning = false;
+let speedUpInterval = null;
+let isInCountdown = false;
 
 //Create 3x4 hole grid
 function createGrid() {
   for (let r = 1; r <= 3; r++) {
     for (let c = 1; c <= 4; c++) {
-      const hole = document.createElement("div");
-      hole.classList.add("hole");
+      const hole = document.createElement('div');
+      hole.classList.add('hole');
       hole.id = `h${c}r${r}`;
 
-      const inner = document.createElement("div");
-      inner.classList.add("hole-inner");
+      const inner = document.createElement('div');
+      inner.classList.add('hole-inner');
 
       hole.appendChild(inner);
       grid.appendChild(hole);
@@ -49,38 +53,43 @@ function createGrid() {
 
 //Create mole image and attach hit event
 function createMole() {
-  mole = document.createElement("img");
-  mole.src = "prof-gross-draft1.png";
-  mole.id = "mole";
-  mole.classList.add("mole-down");
-  mole.addEventListener("click", hitMole);
+  mole = document.createElement('img');
+  mole.src = 'prof-gross-draft1.png';
+  mole.id = 'mole';
+  mole.classList.add('mole-down');
+  mole.addEventListener('click', hitMole);
 }
 
 //Called when mole is clicked
 function hitMole(e) {
-  if (mole.classList.contains("mole-up")) {
-    hammer.classList.add("hit");
-    setTimeout(() => hammer.classList.remove("hit"), 100);
+  if (!isGameRunning || isPaused) {
+    e.stopPropagation();
+    return;
+  }
+
+  if (mole.classList.contains('mole-up')) {
+    hammer.classList.add('hit');
+    setTimeout(() => hammer.classList.remove('hit'), 100);
 
     const elapsed = Date.now() - mole.popStart;
     let bonus = 0;
-    let message = "";
+    let message = '';
 
     if (elapsed < 750) {
       bonus = 10;
-      message = "+10 (Quick hammer hit!)";
+      message = '+10 (Quick hammer hit!)';
     } else {
       bonus = 5;
-      message = "+5 (Normal hit)";
+      message = '+5 (Normal hit)';
     }
 
     hitSound.currentTime = 0;
     hitSound.play();
 
     score += bonus;
-    showPopup(message, mole.closest(".hole"), true);
-    mole.classList.remove("mole-up");
-    mole.classList.add("mole-down");
+    showPopup(message, mole.closest('.hole'), true);
+    mole.classList.remove('mole-up');
+    mole.classList.add('mole-down');
     updateScore();
   }
   e.stopPropagation();
@@ -97,8 +106,10 @@ function updateTime() {
 }
 
 //Schedule next mole popup
-function scheduleNextMole(){
+function scheduleNextMole() {
   if (timeLeft <= 0 || isPaused) return;
+
+  clearTimeout(moleInterval);
   const randomDelay = 500 + Math.random() * 1500;
   moleInterval = setTimeout(() => {
     popUpMole();
@@ -108,27 +119,31 @@ function scheduleNextMole(){
 
 //Start a new game
 function startGame() {
-  clearInterval(gameInterval);
-  clearInterval(moleInterval);
-  gameInterval = null;
-  moleInterval = null;
+  // Prevent multiple starts
+  if (isInCountdown || isGameRunning) return;
+
+  clearAllTimers();
 
   score = 0;
   timeLeft = 60;
   isPaused = false;
   speedFactor = 1.0;
-  pauseBtn.textContent = "Pause";
-  startBtn.textContent = "Start"; //Reset label to "Start"
+  pauseBtn.textContent = 'Pause';
+  startBtn.textContent = 'Start'; //Reset label to "Start"
   updateScore();
   updateTime();
 
   if (mole.parentNode) mole.parentNode.removeChild(mole);
 
+  isInCountdown = true;
   showCountdown(() => {
+    isInCountdown = false;
+    isGameRunning = true;
+
     scheduleNextMole();
 
     //Speed up mole every 12 seconds
-    setInterval(() =>{
+    speedUpInterval = setInterval(() => {
       speedFactor += 0.1;
     }, 12000);
 
@@ -136,55 +151,68 @@ function startGame() {
       timeLeft--;
       updateTime();
       if (timeLeft <= 0) {
-        clearInterval(gameInterval);
-        clearInterval(moleInterval);
-        gameInterval = null;
-        moleInterval = null;
-        endSound.currentTime = 0;
-        endSound.play();
-
-        setTimeout(() => {
-          alert("Game Over!");
-          startBtn.textContent = "Play Again"; // Change label after game over
-        }, 500);
+        endGame();
       }
     }, 1000);
   });
 }
 
+// End game function
+function endGame() {
+  clearAllTimers();
+  isGameRunning = false;
+  endSound.currentTime = 0;
+  endSound.play();
+
+  setTimeout(() => {
+    alert('Game Over!');
+    startBtn.textContent = 'Play Again'; // Change label after game over
+  }, 500);
+}
+
+// Clear all timers
+function clearAllTimers() {
+  clearInterval(gameInterval);
+  clearTimeout(moleInterval);
+  clearInterval(speedUpInterval);
+  gameInterval = null;
+  moleInterval = null;
+  speedUpInterval = null;
+}
+
 //Make a mole appear in a random hole
 function popUpMole() {
-  if (isPaused || moleIsActive){
+  if (isPaused || moleIsActive || !isGameRunning) {
     return;
   }
 
   moleIsActive = true;
 
-  const holes = document.querySelectorAll(".hole");
+  const holes = document.querySelectorAll('.hole');
   const index = Math.floor(Math.random() * holes.length);
   const hole = holes[index];
 
-  if (hole === currentHole){
+  if (hole === currentHole) {
     moleIsActive = false;
     return;
   }
 
   currentHole = hole;
-  const inner = hole.querySelector(".hole-inner");
-  if (mole.parentNode){
+  const inner = hole.querySelector('.hole-inner');
+  if (mole.parentNode) {
     mole.parentNode.removeChild(mole);
   }
   inner.appendChild(mole);
 
   setTimeout(() => {
-    mole.classList.add("mole-up");
-    mole.classList.remove("mole-down");
+    mole.classList.add('mole-up');
+    mole.classList.remove('mole-down');
     mole.popStart = Date.now();
 
     const visibleTime = Math.max(300, 1000 / speedFactor);
     setTimeout(() => {
-      mole.classList.remove("mole-up");
-      mole.classList.add("mole-down");
+      mole.classList.remove('mole-up');
+      mole.classList.add('mole-down');
       moleIsActive = false;
     }, visibleTime);
   }, 100);
@@ -192,38 +220,49 @@ function popUpMole() {
 
 //Toggle pause/resume
 function pauseGame() {
+  if (!isGameRunning && !isInCountdown) return;
+
+  if (isInCountdown) {
+    // Cancel countdown if paused during countdown
+    clearAllTimers();
+    isInCountdown = false;
+    countdown.textContent = '';
+    return;
+  }
+
   isPaused = !isPaused;
-  pauseBtn.textContent = isPaused ? "Resume" : "Pause";
-  if (isPaused){
+  pauseBtn.textContent = isPaused ? 'Resume' : 'Pause';
+  if (isPaused) {
     pauseTimers();
-  }else{
+  } else {
     resumeTimers();
   }
 }
+
 //Stop timers when paused
-function pauseTimers(){
+function pauseTimers() {
   clearInterval(gameInterval);
   clearTimeout(moleInterval);
+  clearInterval(speedUpInterval);
   gameInterval = null;
   moleInterval = null;
 }
+
 //Resume timers after pause
-function resumeTimers(){
+function resumeTimers() {
   scheduleNextMole();
 
-  gameInterval = setInterval(() =>{
+  // Resume speed-up interval
+  speedUpInterval = setInterval(() => {
+    speedFactor += 0.1;
+  }, 12000);
+
+  gameInterval = setInterval(() => {
     timeLeft--;
     updateTime();
 
-    if (timeLeft <= 0){
-      pauseTimers();
-      endSound.currentTime = 0;
-      endSound.play();
-      
-      setTimeout(() =>{
-        alert("Game Over!");
-        startBtn.textContent = "Play Again";
-      }, 500);
+    if (timeLeft <= 0) {
+      endGame();
     }
   }, 1000);
 }
@@ -233,40 +272,48 @@ function showCountdown(callback) {
   countdownSound.currentTime = 0;
   countdownSound.play();
 
-  countdown.textContent = "3";
+  countdown.textContent = '3';
 
-  setTimeout(() => {
-    countdown.textContent = "2";
+  const countdownTwo = setTimeout(() => {
+    countdown.textContent = '2';
   }, 1000);
 
-  setTimeout(() => {
-    countdown.textContent = "1";
+  const countdownOne = setTimeout(() => {
+    countdown.textContent = '1';
   }, 2000);
 
-  setTimeout(() => {
-    countdown.textContent = "Go!";
+  const countdownGo = setTimeout(() => {
+    countdown.textContent = 'Go!';
     startSound.currentTime = 0;
     startSound.play();
     callback();
   }, 3000);
 
-  setTimeout(() => {
-    countdown.textContent = "";
+  const countdownClear = setTimeout(() => {
+    countdown.textContent = '';
   }, 3500);
+
+  // Store countdown timers so they can be cleared if needed
+  window.countdownTimers = [
+    countdownTwo,
+    countdownOne,
+    countdownGo,
+    countdownClear,
+  ];
 }
 
 //Show +10, -5 popup text
 function showPopup(text, hole, isPositive = true) {
-  const popup = document.createElement("div");
+  const popup = document.createElement('div');
   popup.textContent = text;
-  popup.className = "score-popup";
-  popup.style.color = isPositive ? "limegreen" : "crimson";
-  popup.style.fontWeight = "bold";
-  popup.style.fontSize = "20px";
-  popup.style.left = "50%";
-  popup.style.top = "0";
-  popup.style.transform = "translate(-50%, -100%)";
-  popup.style.pointerEvents = "none";
+  popup.className = 'score-popup';
+  popup.style.color = isPositive ? 'limegreen' : 'crimson';
+  popup.style.fontWeight = 'bold';
+  popup.style.fontSize = '20px';
+  popup.style.left = '50%';
+  popup.style.top = '0';
+  popup.style.transform = 'translate(-50%, -100%)';
+  popup.style.pointerEvents = 'none';
   hole.appendChild(popup);
 
   setTimeout(() => {
@@ -275,19 +322,19 @@ function showPopup(text, hole, isPositive = true) {
 }
 
 //Button event handlers
-startBtn.addEventListener("click", () => {
+startBtn.addEventListener('click', () => {
   uiSound.currentTime = 0;
   uiSound.play();
   startGame();
 });
 
-pauseBtn.addEventListener("click", () => {
+pauseBtn.addEventListener('click', () => {
   uiSound.currentTime = 0;
   uiSound.play();
   pauseGame();
 });
 
-restartBtn.addEventListener("click", () => {
+restartBtn.addEventListener('click', () => {
   restartGame();
 });
 
@@ -299,29 +346,31 @@ function restartGame() {
 }
 
 //Miss click
-grid.addEventListener("click", (e) => {
-  if (e.target.classList.contains("hole-inner")) {
+grid.addEventListener('click', (e) => {
+  if (!isGameRunning || isPaused) return;
+
+  if (e.target.classList.contains('hole-inner')) {
     missSound.currentTime = 0;
     missSound.play();
 
     score -= 5;
-    showPopup("-5 (Miss!)", e.target.parentNode, false);
+    showPopup('-5 (Miss!)', e.target.parentNode, false);
     updateScore();
   }
 });
 
 //Hammer movement
-gameGrid.addEventListener("mouseenter", () => {
-  hammer.style.display = "block";
+gameGrid.addEventListener('mouseenter', () => {
+  hammer.style.display = 'block';
 });
 
-gameGrid.addEventListener("mouseleave", () => {
-  hammer.style.display = "none";
+gameGrid.addEventListener('mouseleave', () => {
+  hammer.style.display = 'none';
 });
 
-gameGrid.addEventListener("mousemove", (e) => {
-  hammer.style.left = e.pageX + "px";
-  hammer.style.top = e.pageY + "px";
+gameGrid.addEventListener('mousemove', (e) => {
+  hammer.style.left = e.pageX + 'px';
+  hammer.style.top = e.pageY + 'px';
 });
 
 //Initialize
