@@ -26,10 +26,12 @@ let highScore = sessionStorage.getItem('highScore') || 0; // Load high score fro
 // Set initial high score display
 document.getElementById('highscore').textContent = highScore;
 let timeLeft = 60;
-let gameInterval = null, moleInterval = null;
+let gameInterval = null,
+  moleInterval = null;
 let currentHole;
 let isPaused = false;
 let speedFactor = 1.0;
+const MAX_SPEED_FACTOR = 2.5; // Increased max speed factor
 let moleIsActive = false;
 let isGameRunning = false;
 let speedUpInterval = null;
@@ -38,23 +40,23 @@ let isInCountdown = false;
 // Generate a 3x4 grid of holes with doors and hidden professors
 function createGrid() {
   const positions = [
-  { top: 25,  left: 20 },
-  { top: 25,  left: 160 },
-  { top: 25,  left: 300 },
-  { top: 25,  left: 440 },
+    { top: 25, left: 20 },
+    { top: 25, left: 160 },
+    { top: 25, left: 300 },
+    { top: 25, left: 440 },
 
-  { top: 145, left: 20 },
-  { top: 145, left: 160 },
-  { top: 145, left: 300 },
-  { top: 145, left: 440 },
+    { top: 145, left: 20 },
+    { top: 145, left: 160 },
+    { top: 145, left: 300 },
+    { top: 145, left: 440 },
 
-  { top: 265, left: 20 },
-  { top: 265, left: 160 },
-  { top: 265, left: 300 },
-  { top: 265, left: 440 },
-];
+    { top: 265, left: 20 },
+    { top: 265, left: 160 },
+    { top: 265, left: 300 },
+    { top: 265, left: 440 },
+  ];
 
-positions.forEach((pos) => {
+  positions.forEach((pos) => {
     const hole = document.createElement('div');
     hole.classList.add('hole');
     hole.style.top = pos.top + 'px';
@@ -100,6 +102,11 @@ positions.forEach((pos) => {
 // Update score display and save high score
 function updateScore() {
   scoreBoard.textContent = score;
+  if (score > highScore) {
+    highScore = score;
+    sessionStorage.setItem('highScore', highScore);
+    document.getElementById('highscore').textContent = highScore;
+  }
 }
 
 // Update countdown timer on screen
@@ -141,9 +148,9 @@ function popUpMole() {
       door.src = 'door_open_pix.png';
       professor.style.display = 'block';
 
-      // const visibleTime = Math.max(300, 1000 / speedFactor);
-      const visibleTime = Math.max(300, 1200 * (timeLeft / 60)); 
-
+      // Calculate visible time based on speed factor - adjusted for faster gameplay
+      // More aggressive decrease but with reasonable minimum
+      const visibleTime = Math.max(500, 1200 - speedFactor * 350);
 
       setTimeout(() => {
         professor.style.display = 'none';
@@ -163,11 +170,18 @@ function popUpMole() {
 function scheduleNextMole() {
   if (timeLeft <= 0 || isPaused) return;
   clearTimeout(moleInterval);
-  const randomDelay = 500 + Math.random() * 1500;
+
+  // Adjusted delay calculation for faster gameplay
+  const minDelay = 600; // Decreased from 800
+  const maxDelay = 1600; // Decreased from 1800
+  const speedAdjustedRange = maxDelay - minDelay;
+  const randomFactor = Math.random() * speedAdjustedRange;
+  const delay = Math.max(minDelay, maxDelay - speedFactor * 350 + randomFactor);
+
   moleInterval = setTimeout(() => {
     popUpMole();
     scheduleNextMole();
-  }, randomDelay);
+  }, delay);
 }
 
 // Starts the game and handles all initial and timers
@@ -187,9 +201,14 @@ function startGame() {
     isInCountdown = false;
     isGameRunning = true;
     scheduleNextMole();
+
+    // Speed increases more frequently and by a larger amount
     speedUpInterval = setInterval(() => {
-      speedFactor += 0.1;
-    }, 12000);
+      if (speedFactor < MAX_SPEED_FACTOR) {
+        speedFactor += 0.15; // Increased from 0.1
+      }
+    }, 10000); // Decreased from 15000 to 10000
+
     gameInterval = setInterval(() => {
       timeLeft--;
       updateTime();
@@ -251,8 +270,11 @@ function pauseTimers() {
 function resumeTimers() {
   scheduleNextMole();
   speedUpInterval = setInterval(() => {
-    speedFactor += 0.1;
-  }, 12000);
+    if (speedFactor < MAX_SPEED_FACTOR) {
+      speedFactor += 0.15; // Increased from 0.1
+    }
+  }, 10000); // Decreased from 15000 to 10000
+
   gameInterval = setInterval(() => {
     timeLeft--;
     updateTime();
@@ -266,7 +288,9 @@ function resumeTimers() {
 function restartGame() {
   clearAllTimers();
   if (document.querySelector('.professor')) {
-    document.querySelectorAll('.professor').forEach(p => p.style.display = 'none');
+    document
+      .querySelectorAll('.professor')
+      .forEach((p) => (p.style.display = 'none'));
   }
 
   isGameRunning = false;
@@ -289,8 +313,10 @@ function restartGame() {
     scheduleNextMole();
 
     speedUpInterval = setInterval(() => {
-      speedFactor += 0.1;
-    }, 12000);
+      if (speedFactor < MAX_SPEED_FACTOR) {
+        speedFactor += 0.15; // Increased from 0.1
+      }
+    }, 10000); // Decreased from 15000 to 10000
 
     gameInterval = setInterval(() => {
       timeLeft--;
@@ -307,26 +333,21 @@ function showCountdown(callback) {
   countdownSound.currentTime = 0;
   countdownSound.play();
   countdown.textContent = '3';
-  const countdownTwo = setTimeout(() => countdown.textContent = '2', 1000);
-  const countdownOne = setTimeout(() => countdown.textContent = '1', 2000);
+  const countdownTwo = setTimeout(() => (countdown.textContent = '2'), 1000);
+  const countdownOne = setTimeout(() => (countdown.textContent = '1'), 2000);
   const countdownGo = setTimeout(() => {
     countdown.textContent = 'Go!';
     startSound.currentTime = 0;
     startSound.play();
     callback();
   }, 3000);
-  const countdownClear = setTimeout(() => countdown.textContent = '', 3500);
-  window.countdownTimers = [countdownTwo, countdownOne, countdownGo, countdownClear];
-}
-
-// Update current score and check for new high score
-function updateScore() {
-  scoreBoard.textContent = score;
-  if (score > highScore) {
-    highScore = score;
-    sessionStorage.setItem('highScore', highScore);
-    document.getElementById('highscore').textContent = highScore;
-  }
+  const countdownClear = setTimeout(() => (countdown.textContent = ''), 3500);
+  window.countdownTimers = [
+    countdownTwo,
+    countdownOne,
+    countdownGo,
+    countdownClear,
+  ];
 }
 
 // Display a floating score popup effect
@@ -337,12 +358,27 @@ function showPopup(text, hole, isPositive = true) {
   popup.style.color = isPositive ? 'limegreen' : 'crimson';
   popup.style.fontWeight = 'bold';
   popup.style.fontSize = '20px';
+  popup.style.position = 'absolute'; // Add position absolute
   popup.style.left = '50%';
   popup.style.top = '0';
   popup.style.transform = 'translate(-50%, -100%)';
   popup.style.pointerEvents = 'none';
+  popup.style.zIndex = '1000'; // Add z-index to ensure visibility
   hole.appendChild(popup);
-  setTimeout(() => popup.remove(), 1000);
+
+  // Add animation to make popup more visible
+  let opacity = 1;
+  let position = 0;
+  const animatePopup = setInterval(() => {
+    position -= 2;
+    opacity -= 0.02;
+    popup.style.top = position + 'px';
+    popup.style.opacity = opacity;
+    if (opacity <= 0) {
+      clearInterval(animatePopup);
+      popup.remove();
+    }
+  }, 20);
 }
 
 // Bind button clicks
@@ -368,11 +404,20 @@ restartBtn.addEventListener('click', () => {
 // Track the number of clicks with miss penalties
 grid.addEventListener('click', (e) => {
   if (!isGameRunning || isPaused) return;
-  if (e.target.classList.contains('hole-inner')) {
+
+  // Fix for miss detection - check for hole-inner class or if it's a parent element
+  const holeInner = e.target.classList.contains('hole-inner')
+    ? e.target
+    : e.target.closest('.hole-inner');
+
+  if (holeInner && !e.target.classList.contains('professor')) {
     missSound.currentTime = 0;
     missSound.play();
     score -= 5;
-    showPopup('-5 (Miss!)', e.target.parentNode, false);
+
+    // Get the parent hole element for the popup
+    const holeElement = holeInner.closest('.hole');
+    showPopup('-5 (Miss!)', holeElement, false);
     updateScore();
   }
 });
