@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <!-- Game Title and Buttons -->
     <div class="header">
       <h1>Whack-a-Professor</h1>
       <div class="buttons">
@@ -16,16 +17,23 @@
       </div>
     </div>
 
+    <!-- Score Display -->
     <div class="scoreboard">
+      <h2 class="highlight">🏆 High Score: <span id="highscore">0</span></h2>
       <h2>SCORE: <span id="score">0</span></h2>
       <h3>Time Left: <span id="timer">60</span></h3>
     </div>
 
+    <!-- Countdown before game starts -->
     <div id="countdown-message"></div>
+
+    <!-- Game Area -->
     <div class="game-grid" id="grid"></div>
 
+    <!-- Hammer image that follows mouse -->
     <img id="hammer" src="hammer.png" alt="Hammer" />
 
+    <!-- Main Game Logic -->
     <script src="Whack-A-Mole.js" defer></script>
   </body>
 </html>

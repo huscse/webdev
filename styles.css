@@ -1,21 +1,22 @@
-/* Global body styling and custom cursor */
+/* Page background, font, and custom hammer cursor */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background-color: #eef7fc;
+  background-color: #ffeac3;
   text-align: center;
   cursor: url('hammer.png'), auto;
 }
 
-/* Header styling */
+/* Game header styling */
 header {
-  background-color: #127399;
+  background-color: #ffab3d;
   color: white;
   padding: 20px 0;
   margin-bottom: 30px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Game title text */
 header h1 {
   margin: 0;
   font-size: 38px;
@@ -24,13 +25,13 @@ header h1 {
   color: white;
 }
 
-/* Game title styling (if outside header) */
+/* Main heading outside header */
 h1 {
-  color: #127399;
+  color: #996900;
   margin-top: 20px;
 }
 
-/* Content section styling */
+/* Intro description section */
 .content-section {
   max-width: 800px;
   margin: 0 auto 30px;
@@ -41,27 +42,26 @@ h1 {
   text-align: left;
 }
 
+/* Section titles */
 .content-section h2 {
-  color: #127399;
-  border-bottom: 2px solid #127399;
+  color: #fdb42d;
+  border-bottom: 2px solid #ffa600;
   padding-bottom: 10px;
   margin-top: 0;
 }
 
-/* List styling */
-ul,
-ol {
+/* List spacing */
+ul, ol {
   padding-left: 25px;
 }
 
-ul li,
-ol li {
+ul li, ol li {
   margin-bottom: 10px;
 }
 
-/* Shared button styling */
+/* General button style */
 button {
-  background-color: #127399;
+  background-color: #e4a945;
   color: white;
   padding: 10px 20px;
   margin: 10px;
@@ -72,17 +72,15 @@ button {
   transition: all 0.3s ease;
 }
 
-/* Button hover effect */
 button:hover {
-  background-color: #0e5c7a;
+  background-color: #cf9434;
 }
 
-/* Button press effect */
 button:active {
   transform: scale(0.95);
 }
 
-/* Start Game button specific styles */
+/* Start button specific effects */
 #start-button {
   display: block;
   margin: 30px auto;
@@ -101,80 +99,114 @@ button:active {
 
 #start-button:active {
   transform: translateY(1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(81, 29, 226, 0.2);
 }
 
-/* Scoreboard styling */
+/* Score display styling */
 .scoreboard {
   margin-top: 10px;
   font-size: 20px;
   font-weight: bold;
-  color: #127399;
+  color: #997512;
 }
 
-/* Countdown message before game starts */
+/* Highlighted high score style */
+.scoreboard .highlight {
+  font-size: 26px;
+  color: #eb7b13;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+  background: linear-gradient(to right, #ffdd99, #ffeccf);
+  padding: 8px 16px;
+  border-radius: 20px;
+  display: inline-block;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Countdown timer styling */
 #countdown-message {
   font-size: 80px;
   font-weight: bold;
-  color: #222;
+  color: #e74c3c;
   margin: 20px 0;
   height: 100px;
   transition: opacity 0.3s ease;
 }
 
-/* Game grid layout */
+/* Game background area */
 #grid {
-  display: grid;
-  grid-template-columns: repeat(4, 100px);
-  grid-template-rows: repeat(3, 100px);
-  gap: 20px;
-  justify-content: center;
+  position: relative;
+  width: 580px;
+  height: 361px;
   margin: 30px auto;
-  background-color: #fffdd0;
-  padding: 20px 20px 1px 20px;
-  border-radius: 12px;
-  width: max-content;
+  cursor: none;
+  background: url('background.png') no-repeat center;
+  background-size: 100% 100%;
 }
 
-/* Each hole container */
+/* Each door (aka mole hole) */
 .hole {
-  position: relative;
-  overflow: visible;
-}
-
-.hole-inner {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background-color: #222;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Mole image */
-#mole {
   position: absolute;
-  bottom: -80px;
+  width: 110px;
+  height: 120px;
+  transform: translateX(-50%);
+}
+
+/* Inner container for door and professor */
+.hole-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+/* Door image */
+.hole-inner img.door {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 1;
+}
+
+/* Professor character */
+.hole-inner img.professor {
+  position: absolute;
+  width: 80%;
+  height: auto;
+  bottom: 0;
+  display: none;
+  z-index: 2;
+  pointer-events: auto;
+  cursor: none;
   left: 50%;
   transform: translateX(-50%);
-  width: 80px;
+}
+
+/* Running professor intro GIF */
+#professor-run {
+  width: 600px;
   height: auto;
-  transition: bottom 0.3s ease;
-  pointer-events: auto;
-  background-color: rgba(0, 0, 0, 0.01);
-  cursor: pointer;
+  display: block;
+  margin: 0 auto 20px;
 }
 
-/* Mole position states */
-.mole-up {
-  bottom: -20px !important;
+/* Hammer cursor that follows player */
+#hammer {
+  position: absolute;
+  width: 60px;
+  height: auto;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease;
+  z-index: 1000;
+  display: none;
 }
 
-.mole-down {
-  bottom: -80px !important;
+#hammer.hit {
+  transform: translate(-50%, -50%) rotate(-45deg);
 }
 
-/* Score popup animation */
+/* +10 or -5 popup effect */
 .score-popup {
   animation: floatUp 0.8s ease-out forwards;
   z-index: 10;
@@ -192,28 +224,12 @@ button:active {
   }
 }
 
-/* Hammer image styling */
-#hammer {
-  position: absolute;
-  width: 60px;
-  height: auto;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  transition: transform 0.1s ease;
-  z-index: 1000;
-  display: none;
-}
-
-#hammer.hit {
-  transform: translate(-50%, -50%) rotate(-45deg);
-}
-
-/* Timer padding */
+/* Countdown timer spacing */
 #timer {
   padding-bottom: 10px;
 }
 
-/* Responsive design */
+/* Responsive adjustments */
 @media (max-width: 850px) {
   .content-section {
     max-width: 90%;
